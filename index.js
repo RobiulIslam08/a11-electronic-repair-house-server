@@ -49,6 +49,25 @@ async function run() {
 		res.send(result)
 		
 	})
+	// app.get('/purchaseService', async(req, res)=>{
+	// 	const cursor = bookedCollection.find()
+	// 	const result = await cursor.toArray()
+	// 	res.send(result)
+	// })
+	app.get('/purchaseService/:email', async (req, res) => {
+		const email = req.params.email
+		const query = { currentUserEmail: email }
+		const cursor = bookedCollection.find(query)
+		const result = await cursor.toArray()
+		res.send(result)
+	  })
+	app.post('/purchaseService', async(req, res)=>{
+		const servicesInfo = req.body
+		console.log(servicesInfo)
+		const result = await bookedCollection.insertOne(servicesInfo)
+		res.send(result)
+		
+	})
 	app.get('/allService/:_id',async (req,res)=>{
 		const id = req.params._id
 		const query = {_id : new ObjectId(id)}
