@@ -55,6 +55,13 @@ async function run() {
 		const result = await servicesCollection.findOne(query) 
 		res.send(result)
 	  })
+	  app.get('/manageService/:email', async (req, res) => {
+		const email = req.params.email
+		const query = { providerEmail: email }
+		const cursor = servicesCollection.find(query)
+		const result = await cursor.toArray()
+		res.send(result)
+	  })
 
 
 
