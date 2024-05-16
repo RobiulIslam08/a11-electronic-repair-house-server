@@ -45,11 +45,25 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     // await client.connect();
 
+	// app.get('/allService', async(req, res)=>{
+	// 	const cursor = servicesCollection.find()
+	// 	const result = await cursor.toArray()
+	// 	res.send(result)
+	// })
 	app.get('/allService', async(req, res)=>{
-		const cursor = servicesCollection.find()
-		const result = await cursor.toArray()
+		// const cursor = servicesCollection.find()
+		const search = req.query.search
+		console.log(search)
+		
+		let query = {
+			serviceName : {$regex: search, $options: 'i' }
+		}
+		console.log(query)
+		
+		const result = await servicesCollection.find(query).toArray()
 		res.send(result)
 	})
+	// __________________________________
 	app.post('/allService', async(req, res)=>{
 		const servicesInfo = req.body
 		console.log(servicesInfo)
