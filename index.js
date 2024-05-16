@@ -13,6 +13,14 @@ const corsOptions = {
 }
 // midleware 
 app.use(cors(corsOptions))
+
+// ---------------------------
+// const corsConfig = {
+// 	origin: '*',
+// 	credentials: true,
+// 	methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+// 	}
+// 	app.use(cors(corsConfig))
 app.use(express.json())
 
 
