@@ -50,19 +50,41 @@ async function run() {
 	// 	const result = await cursor.toArray()
 	// 	res.send(result)
 	// })
-	app.get('/allService', async(req, res)=>{
-		// const cursor = servicesCollection.find()
-		const search = req.query.search
-		console.log(search)
+
+
+	// app.get('/allService', async(req, res)=>{
+	// 	// const cursor = servicesCollection.find()
+	// 	const search = req.query.search
+	// 	console.log(search)
 		
-		let query = {
-			serviceName : {$regex: search, $options: 'i' }
+	// 	let query = {
+	// 		serviceName : {$regex: search, $options: 'i' }
+	// 	}
+	// 	console.log(query)
+		
+	// 	const result = await servicesCollection.find(query).toArray()
+	// 	res.send(result)
+	// })
+
+	app.get('/allService', async (req, res) => {
+		const search = req.query.search;
+	
+		// Check if the search parameter is defined
+		let query = {};
+		if (search) {
+			query = {
+				serviceName: { $regex: search, $options: 'i' }
+			};
 		}
-		console.log(query)
-		
-		const result = await servicesCollection.find(query).toArray()
-		res.send(result)
-	})
+	
+		try {
+			const result = await servicesCollection.find(query).toArray();
+			res.send(result);
+		} catch (error) {
+			console.error(error);
+			res.status(500).send({ message: "An error occurred while fetching services." });
+		}
+	});
 	// __________________________________
 	app.post('/allService', async(req, res)=>{
 		const servicesInfo = req.body
@@ -109,6 +131,15 @@ async function run() {
 		const result = await servicesCollection.deleteOne(query)
 		res.send(result)
 	  })
+
+	  app.get('/serviceTodo/:email', async (req, res) => {
+		const email = req.params.email
+		const query = { providerEmail: email }
+		const cursor = bookedCollection.find(query)
+		const result = await cursor.toArray()
+		res.send(result)
+	  })
+
 	  app.put('/updatePage/:id', async(req, res)=>{
 		const id =req.params.id;
 		const filter ={_id: new ObjectId(id)}
@@ -122,6 +153,18 @@ async function run() {
 		const result = await servicesCollection.updateOne(filter,service)
 		res.send(result)
 	  })
+	//   update status
+	  app.patch('/todo/:id', async(req, res)=>{
+		const id = req.params.id;
+		const status = req.body
+		const query = {_id: new ObjectId(id)}
+		const updateDoc = {
+			$set: status	
+		}
+		const result = await bookedCollection.updateOne(query,updateDoc)
+		res.send(result)
+	  })
+
 
 
 
